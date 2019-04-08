@@ -11,7 +11,6 @@ import (
 	"html/template"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -27,7 +26,7 @@ type Monaco struct {
 	Edit     bool   // editable code
 	FileName string // file name
 	Ext      string // file extension
-	Raw      []byte // content of the file
+	Raw      string // content of the file
 }
 
 type monacoTemplateData struct {
@@ -43,21 +42,13 @@ type monacoLine struct {
 	HL bool   // Whether the line should be highlighted.
 }
 
-var monacoTemplate = template.Must(template.New("monaco").Funcs(template.FuncMap{
-	"trimSpace":    strings.TrimSpace,
-	"leadingSpace": mleadingSpaceRE.FindString,
-}).Parse(`<div class="my-editor" data-raw="{{.Raw}}"></div>`))
-
 func (m Monaco) TemplateName() string { return monacoName }
 
 // The input line is a .code or .play entry with a file name and an optional HLfoo marker on the end.
 // Anything between the file and HL (if any) is an address expression, which we treat as a string here.
 // We pick off the HL first, for easy parsing.
 var (
-	mhighlightRE    = regexp.MustCompile(`\s+HL([a-zA-Z0-9_]+)?$`)
-	mhlCommentRE    = regexp.MustCompile(`(.+) // HL(.*)$`)
-	mcodeRE         = regexp.MustCompile(`\.(monaco)\s+((?:(?:-edit|-numbers)\s+)*)([^\s]+)(?:\s+(.*))?$`)
-	mleadingSpaceRE = regexp.MustCompile(`^[ \t]*`)
+	mcodeRE = regexp.MustCompile(`\.(monaco)\s+((?:(?:-edit|-numbers)\s+)*)([^\s]+)(?:\s+(.*))?$`)
 )
 
 // parseCode parses a code present directive. Its syntax:
@@ -66,20 +57,10 @@ var (
 func parseMonaco(ctx *Context, sourceFile string, sourceLine int, cmd string) (Elem, error) {
 	cmd = strings.TrimSpace(cmd)
 
-	// Pull off the HL, if any, from the end of the input line.
-	highlight := ""
-	if hl := mhighlightRE.FindStringSubmatchIndex(cmd); len(hl) == 4 {
-		if hl[2] < 0 || hl[3] < 0 {
-			return nil, fmt.Errorf("%s:%d invalid highlight syntax", sourceFile, sourceLine)
-		}
-		highlight = cmd[hl[2]:hl[3]]
-		cmd = cmd[:hl[2]-2]
-	}
-
 	// Parse the remaining command line.
 	// Arguments:
 	// args[0]: whole match
-	// args[1]:  .monaco
+	// args[1]: .monaco
 	// args[2]: flags ("-edit -numbers")
 	// args[3]: file name
 	// args[4]: optional address
@@ -87,8 +68,7 @@ func parseMonaco(ctx *Context, sourceFile string, sourceLine int, cmd string) (E
 	if len(args) != 5 {
 		return nil, fmt.Errorf("%s:%d: syntax error for .%s invocation", sourceFile, monacoName, sourceLine)
 	}
-	command, flags, file, addr := args[1], args[2], args[3], strings.TrimSpace(args[4])
-	play := command == "play" && PlayEnabled
+	_, _, file, addr := args[1], args[2], args[3], strings.TrimSpace(args[4])
 
 	// Read in code file and (optionally) match address.
 	filename := filepath.Join(filepath.Dir(sourceFile), file)
@@ -119,52 +99,52 @@ func parseMonaco(ctx *Context, sourceFile string, sourceLine int, cmd string) (E
 
 	lines := monacoLines(textBytes, lo, hi)
 
-	data := &monacoTemplateData{
-		Lines:   mformatLines(lines, highlight),
-		Edit:    strings.Contains(flags, "-edit"),
-		Numbers: strings.Contains(flags, "-numbers"),
-		Raw:     string(mRawCode(lines)),
-	}
+	// data := &monacoTemplateData{
+	// 	Lines:   mformatLines(lines, highlight),
+	// 	Edit:    strings.Contains(flags, "-edit"),
+	// 	Numbers: strings.Contains(flags, "-numbers"),
+	// 	Raw:     string(mRawCode(lines)),
+	// }
 
 	// Include before and after in a hidden span for playground code.
-	if play {
-		data.Prefix = textBytes[:lo]
-		data.Suffix = textBytes[hi:]
-	}
+	// if play {
+	// 	data.Prefix = textBytes[:lo]
+	// 	data.Suffix = textBytes[hi:]
+	// }
 
-	var buf bytes.Buffer
-	if err := monacoTemplate.Execute(&buf, data); err != nil {
-		return nil, err
-	}
-	return Code{
-		Text:     template.HTML(buf.String()),
-		Play:     play,
-		Edit:     data.Edit,
-		FileName: filepath.Base(filename),
-		Ext:      filepath.Ext(filename),
-		Raw:      mRawCode(lines),
+	// var buf bytes.Buffer
+	// if err := monacoTemplate.Execute(&buf, data); err != nil {
+	// 	return nil, err
+	// }
+	return Monaco{
+		// Text: template.HTML(buf.String()),
+		// Play:     play,
+		// Edit:     data.Edit,
+		// FileName: filepath.Base(filename),
+		// Ext:      filepath.Ext(filename),
+		Raw: string(mRawCode(lines)),
 	}, nil
 }
 
 // mformatLines returns a new slice of codeLine with the given lines
 // replacing tabs with spaces and adding highlighting where needed.
-func mformatLines(lines []codeLine, highlight string) []codeLine {
-	formatted := make([]codeLine, len(lines))
-	for i, line := range lines {
-		// Replace tabs with spaces, which work better in HTML.
-		line.L = strings.Replace(line.L, "\t", "    ", -1)
+// func mformatLines(lines []codeLine, highlight string) []codeLine {
+// 	formatted := make([]codeLine, len(lines))
+// 	for i, line := range lines {
+// 		// Replace tabs with spaces, which work better in HTML.
+// 		line.L = strings.Replace(line.L, "\t", "    ", -1)
 
-		// Highlight lines that end with "// HL[highlight]"
-		// and strip the magic comment.
-		if m := mhlCommentRE.FindStringSubmatch(line.L); m != nil {
-			line.L = m[1]
-			line.HL = m[2] == highlight
-		}
+// 		// Highlight lines that end with "// HL[highlight]"
+// 		// and strip the magic comment.
+// 		if m := mhlCommentRE.FindStringSubmatch(line.L); m != nil {
+// 			line.L = m[1]
+// 			line.HL = m[2] == highlight
+// 		}
 
-		formatted[i] = line
-	}
-	return formatted
-}
+// 		formatted[i] = line
+// 	}
+// 	return formatted
+// }
 
 // mRawCode returns the code represented by the given monacoLines without any kind
 // of formatting.
@@ -206,39 +186,6 @@ func monacoLines(src []byte, start, end int) (lines []codeLine) {
 	}
 	for len(lines) > 0 && len(lines[len(lines)-1].L) == 0 {
 		lines = lines[:len(lines)-1]
-	}
-	return
-}
-
-func mParseArgs(name string, line int, args []string) (res []interface{}, err error) {
-	res = make([]interface{}, len(args))
-	for i, v := range args {
-		if len(v) == 0 {
-			return nil, fmt.Errorf("%s:%d bad code argument %q", name, line, v)
-		}
-		switch v[0] {
-		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-			n, err := strconv.Atoi(v)
-			if err != nil {
-				return nil, fmt.Errorf("%s:%d bad code argument %q", name, line, v)
-			}
-			res[i] = n
-		case '/':
-			if len(v) < 2 || v[len(v)-1] != '/' {
-				return nil, fmt.Errorf("%s:%d bad code argument %q", name, line, v)
-			}
-			res[i] = v
-		case '$':
-			res[i] = "$"
-		case '_':
-			if len(v) == 1 {
-				// Do nothing; "_" indicates an intentionally empty parameter.
-				break
-			}
-			fallthrough
-		default:
-			return nil, fmt.Errorf("%s:%d bad code argument %q", name, line, v)
-		}
 	}
 	return
 }

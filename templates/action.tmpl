@@ -32,7 +32,7 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "monaco"}}
-  {{.HTML}}
+  <div class="my-editor" data-raw="{{.Raw}}"></div>
 {{end}}
 
 {{define "image"}}

@@ -202,6 +202,9 @@ function updateSlides() {
   enableSlideFrames(curSlide + 2);
 
   updateHash();
+  // 前後頁如果有 monaco 的話， init 他
+  if(window.hasOwnProperty('monaco'))
+    initPlayground(SocketTransport());
 };
 
 function prevSlide() {

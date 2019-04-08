@@ -10,7 +10,6 @@
       var notesEnabled = {{.NotesEnabled}};
     </script>
     <link rel="stylesheet" type="text/css" href="/static/styles.css">
-    <script src='/static/slides.js'></script>
     {{if .NotesEnabled}}
     <script>
       var sections = {{.Sections}};
@@ -23,6 +22,7 @@
     <script src='/static/jquery-ui.js'></script>
     <script src='/static/playground.js'></script>
     <script src='/static/play.js'></script>
+    <script src='/static/slides.js'></script>
     <script>
       window.onload = function() {
         // initPlayground("SocketTransport");

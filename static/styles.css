@@ -31,7 +31,7 @@
   /* 這行必需要加，不然 editor 會出不來 */
   .my-editor {
     /* position: absolute; */
-    display: block;
+    /* display: block !important; */
     left: 0;
     top: 0;
     width: 100%;
@@ -144,9 +144,11 @@
   /* Slides */
 
   .slides > article {
-    /* overflow: scroll; */
     display: none;
   }
+  /* .slides > article.slide-hide {
+    display: none;
+  } */
   .slides > article.far-past {
     display: block;
     transform: translate(-2040px);
@@ -156,7 +158,6 @@
   }
   .slides > article.past {
     display: block;
-    /* display: none; */
     transform: translate(-1020px);
     -o-transform: translate(-1020px);
     -moz-transform: translate(-1020px);
@@ -171,7 +172,6 @@
   }
   .slides > article.next {
     display: block;
-    /* display: none; */
     transform: translate(1020px);
     -o-transform: translate(1020px);
     -moz-transform: translate(1020px);
@@ -196,7 +196,6 @@
   .slides.layout-widescreen > article.past,
   .slides.layout-faux-widescreen > article.past {
     display: block;
-    /* display: none; */
     transform: translate(-1130px);
     -o-transform: translate(-1130px);
     -moz-transform: translate(-1130px);
@@ -213,7 +212,6 @@
   .slides.layout-widescreen > article.next,
   .slides.layout-faux-widescreen > article.next {
     display: block;
-    /* display: none; */
     transform: translate(1130px);
     -o-transform: translate(1130px);
     -moz-transform: translate(1130px);
