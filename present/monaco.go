@@ -15,25 +15,13 @@ import (
 	"strings"
 )
 
-// PlayEnabled specifies whether runnable playground snippets should be
-// displayed in the present user interface.
-var PlayEnabled = false
-
-// TODO(adg): replace the PlayEnabled flag with something less spaghetti-like.
-// Instead this will probably be determined by a template execution Context
-// value that contains various global metadata required when rendering
-// templates.
-
-// NotesEnabled specifies whether presenter notes should be displayed in the
-// present user interface.
-var NotesEnabled = false
+const monacoName = "monaco"
 
 func init() {
-	Register("code", parseCode)
-	Register("play", parseCode)
+	Register(monacoName, parseMonaco)
 }
 
-type Code struct {
+type Monaco struct {
 	Text     template.HTML
 	Play     bool   // runnable code
 	Edit     bool   // editable code
@@ -42,26 +30,45 @@ type Code struct {
 	Raw      []byte // content of the file
 }
 
-func (c Code) TemplateName() string { return "code" }
+type monacoTemplateData struct {
+	Lines          []codeLine
+	Prefix, Suffix []byte
+	Edit, Numbers  bool
+	Raw            string
+}
+
+type monacoLine struct {
+	L  string // The line of code.
+	N  int    // The line number from the source file.
+	HL bool   // Whether the line should be highlighted.
+}
+
+var monacoTemplate = template.Must(template.New("monaco").Funcs(template.FuncMap{
+	"trimSpace":    strings.TrimSpace,
+	"leadingSpace": mleadingSpaceRE.FindString,
+}).Parse(`<div class="my-editor" data-raw="{{.Raw}}"></div>`))
+
+func (m Monaco) TemplateName() string { return monacoName }
 
 // The input line is a .code or .play entry with a file name and an optional HLfoo marker on the end.
 // Anything between the file and HL (if any) is an address expression, which we treat as a string here.
 // We pick off the HL first, for easy parsing.
 var (
-	highlightRE = regexp.MustCompile(`\s+HL([a-zA-Z0-9_]+)?$`)
-	hlCommentRE = regexp.MustCompile(`(.+) // HL(.*)$`)
-	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers)\s+)*)([^\s]+)(?:\s+(.*))?$`)
+	mhighlightRE    = regexp.MustCompile(`\s+HL([a-zA-Z0-9_]+)?$`)
+	mhlCommentRE    = regexp.MustCompile(`(.+) // HL(.*)$`)
+	mcodeRE         = regexp.MustCompile(`\.(monaco)\s+((?:(?:-edit|-numbers)\s+)*)([^\s]+)(?:\s+(.*))?$`)
+	mleadingSpaceRE = regexp.MustCompile(`^[ \t]*`)
 )
 
 // parseCode parses a code present directive. Its syntax:
 //   .code [-numbers] [-edit] <filename> [address] [highlight]
 // The directive may also be ".play" if the snippet is executable.
-func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Elem, error) {
+func parseMonaco(ctx *Context, sourceFile string, sourceLine int, cmd string) (Elem, error) {
 	cmd = strings.TrimSpace(cmd)
 
 	// Pull off the HL, if any, from the end of the input line.
 	highlight := ""
-	if hl := highlightRE.FindStringSubmatchIndex(cmd); len(hl) == 4 {
+	if hl := mhighlightRE.FindStringSubmatchIndex(cmd); len(hl) == 4 {
 		if hl[2] < 0 || hl[3] < 0 {
 			return nil, fmt.Errorf("%s:%d invalid highlight syntax", sourceFile, sourceLine)
 		}
@@ -72,13 +79,13 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 	// Parse the remaining command line.
 	// Arguments:
 	// args[0]: whole match
-	// args[1]:  .code/.play
+	// args[1]:  .monaco
 	// args[2]: flags ("-edit -numbers")
 	// args[3]: file name
 	// args[4]: optional address
-	args := codeRE.FindStringSubmatch(cmd)
+	args := mcodeRE.FindStringSubmatch(cmd)
 	if len(args) != 5 {
-		return nil, fmt.Errorf("%s:%d: syntax error for .code/.play invocation", sourceFile, sourceLine)
+		return nil, fmt.Errorf("%s:%d: syntax error for .%s invocation", sourceFile, monacoName, sourceLine)
 	}
 	command, flags, file, addr := args[1], args[2], args[3], strings.TrimSpace(args[4])
 	play := command == "play" && PlayEnabled
@@ -110,13 +117,13 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 		}
 	}
 
-	lines := codeLines(textBytes, lo, hi)
+	lines := monacoLines(textBytes, lo, hi)
 
-	data := &codeTemplateData{
-		Lines:   formatLines(lines, highlight),
+	data := &monacoTemplateData{
+		Lines:   mformatLines(lines, highlight),
 		Edit:    strings.Contains(flags, "-edit"),
 		Numbers: strings.Contains(flags, "-numbers"),
-		Raw:     string(rawCode(lines)),
+		Raw:     string(mRawCode(lines)),
 	}
 
 	// Include before and after in a hidden span for playground code.
@@ -126,7 +133,7 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 	}
 
 	var buf bytes.Buffer
-	if err := codeTemplate.Execute(&buf, data); err != nil {
+	if err := monacoTemplate.Execute(&buf, data); err != nil {
 		return nil, err
 	}
 	return Code{
@@ -135,13 +142,13 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 		Edit:     data.Edit,
 		FileName: filepath.Base(filename),
 		Ext:      filepath.Ext(filename),
-		Raw:      rawCode(lines),
+		Raw:      mRawCode(lines),
 	}, nil
 }
 
-// formatLines returns a new slice of codeLine with the given lines
+// mformatLines returns a new slice of codeLine with the given lines
 // replacing tabs with spaces and adding highlighting where needed.
-func formatLines(lines []codeLine, highlight string) []codeLine {
+func mformatLines(lines []codeLine, highlight string) []codeLine {
 	formatted := make([]codeLine, len(lines))
 	for i, line := range lines {
 		// Replace tabs with spaces, which work better in HTML.
@@ -149,7 +156,7 @@ func formatLines(lines []codeLine, highlight string) []codeLine {
 
 		// Highlight lines that end with "// HL[highlight]"
 		// and strip the magic comment.
-		if m := hlCommentRE.FindStringSubmatch(line.L); m != nil {
+		if m := mhlCommentRE.FindStringSubmatch(line.L); m != nil {
 			line.L = m[1]
 			line.HL = m[2] == highlight
 		}
@@ -159,9 +166,9 @@ func formatLines(lines []codeLine, highlight string) []codeLine {
 	return formatted
 }
 
-// rawCode returns the code represented by the given codeLines without any kind
+// mRawCode returns the code represented by the given monacoLines without any kind
 // of formatting.
-func rawCode(lines []codeLine) []byte {
+func mRawCode(lines []codeLine) []byte {
 	b := new(bytes.Buffer)
 	for _, line := range lines {
 		b.WriteString(line.L)
@@ -170,44 +177,12 @@ func rawCode(lines []codeLine) []byte {
 	return b.Bytes()
 }
 
-type codeTemplateData struct {
-	Lines          []codeLine
-	Prefix, Suffix []byte
-	Edit, Numbers  bool
-	Raw            string
-}
-
-var leadingSpaceRE = regexp.MustCompile(`^[ \t]*`)
-
-var codeTemplate = template.Must(template.New("code").Funcs(template.FuncMap{
-	"trimSpace":    strings.TrimSpace,
-	"leadingSpace": leadingSpaceRE.FindString,
-}).Parse(codeTemplateHTML))
-
-const codeTemplateHTML = `
-{{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
-
-<pre{{if .Edit}} contenteditable="true" onclick="formatDoc('indent');" spellcheck="false"{{end}}{{if .Numbers}} class="numbers"{{end}}>{{/*
-	*/}}{{range .Lines}}<span num="{{.N}}">{{/*
-	*/}}{{if .HL}}{{leadingSpace .L}}<b>{{trimSpace .L}}</b>{{/*
-	*/}}{{else}}{{.L}}{{end}}{{/*
-*/}}</span>
-{{end}}</pre>
-
-{{with .Suffix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
-`
-
 // codeLine represents a line of code extracted from a source file.
-type codeLine struct {
-	L  string // The line of code.
-	N  int    // The line number from the source file.
-	HL bool   // Whether the line should be highlighted.
-}
 
-// codeLines takes a source file and returns the lines that
+// monacoLines takes a source file and returns the lines that
 // span the byte range specified by start and end.
 // It discards lines that end in "OMIT".
-func codeLines(src []byte, start, end int) (lines []codeLine) {
+func monacoLines(src []byte, start, end int) (lines []codeLine) {
 	startLine := 1
 	for i, b := range src {
 		if i == start {
@@ -235,7 +210,7 @@ func codeLines(src []byte, start, end int) (lines []codeLine) {
 	return
 }
 
-func parseArgs(name string, line int, args []string) (res []interface{}, err error) {
+func mParseArgs(name string, line int, args []string) (res []interface{}, err error) {
 	res = make([]interface{}, len(args))
 	for i, v := range args {
 		if len(v) == 0 {

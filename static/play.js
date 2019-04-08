@@ -37,7 +37,7 @@ function initPlayground(transport) {
 		}
 		return s.replace('\xA0', ' '); // replace non-breaking spaces
 	}
-
+	window.editors = []
 	// When presenter notes are enabled, the index passed
 	// here will identify the playground to be synced
 	function init(code, index) {
@@ -51,7 +51,7 @@ function initPlayground(transport) {
 			theme: 'vs',
 			fontSize: 20
 		});
-
+		window.editors.push(editor)
 		if ($ && $(output).resizable) {
 			$(output).resizable({
 				handles: 	'n,w,nw',
@@ -132,6 +132,7 @@ function initPlayground(transport) {
 	var play = document.querySelectorAll('.my-editor')
 	
 	for (var i = 0; i < play.length; i++) {
+		console.log(play[i].style.display)
 		init(play[i], i);
 	}
 }

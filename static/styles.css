@@ -31,6 +31,7 @@
   /* 這行必需要加，不然 editor 會出不來 */
   .my-editor {
     /* position: absolute; */
+    display: block;
     left: 0;
     top: 0;
     width: 100%;

@@ -31,6 +31,10 @@ It determines how the formatting actions are rendered.
   <div class="code{{if playable .}} playground{{end}}" {{if .Edit}}contenteditable="true" spellcheck="false"{{end}}>{{.Text}}</div>
 {{end}}
 
+{{define "monaco"}}
+  {{.HTML}}
+{{end}}
+
 {{define "image"}}
 <div class="image">
   <img src="{{.URL}}"{{with .Height}} height="{{.}}"{{end}}{{with .Width}} width="{{.}}"{{end}}>
