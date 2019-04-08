@@ -103,7 +103,7 @@ func main() {
 		log.Print(localhostWarning)
 	}
 
-	log.Printf("Open your web browser and visitssssss %s", origin.String())
+	log.Printf("Open your web browser and visit %s", origin.String())
 	if present.NotesEnabled {
 		log.Println("Notes are enabled, press 'N' from the browser to display them.")
 	}
