@@ -10,7 +10,6 @@
       var notesEnabled = {{.NotesEnabled}};
     </script>
     <script src='/static/slides.js'></script>
-
     {{if .NotesEnabled}}
     <script>
       var sections = {{.Sections}};
@@ -18,6 +17,8 @@
     </script>
     <script src='/static/notes.js'></script>
     {{end}}
+    <script src='https://requirejs.org/docs/release/2.3.5/minified/require.js'></script>
+    <script src='/static/monaco2.js'></script>
 
     <script>
       // Initialize Google Analytics tracking code on production site only.
