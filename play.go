@@ -5,18 +5,14 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
-	"path/filepath"
 	"runtime"
-	"time"
 
 	"github.com/leexun/mypresent/present"
 	"github.com/leexun/mypresent/socket"
-	static "github.com/leexun/mypresent/static.1"
+
+	// static "github.com/leexun/mypresent/static.1"
 
 	// "golang.org/x/tools/godoc/static"
 	// "golang.org/x/tools/playground/socket"
@@ -32,37 +28,39 @@ import (
 
 var scripts = []string{"jquery.js", "jquery-ui.js", "playground.js", "play.js"}
 
+// var scripts = []string{}
+
 // playScript registers an HTTP handler at /play.js that serves all the
 // scripts specified by the variable above, and appends a line that
 // initializes the playground with the specified transport.
-func playScript(root, transport string) {
-	modTime := time.Now()
-	var buf bytes.Buffer
-	for _, p := range scripts {
-		if s, ok := static.Files[p]; ok {
-			buf.WriteString(s)
-			continue
-		}
-		b, err := ioutil.ReadFile(filepath.Join(root, "static", p))
-		if err != nil {
-			panic(err)
-		}
-		buf.Write(b)
-	}
-	fmt.Fprintf(&buf, "\ninitPlayground(new %v());\n", transport)
-	b := buf.Bytes()
-	http.HandleFunc("/play.js", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-type", "application/javascript")
-		http.ServeContent(w, r, "", modTime, bytes.NewReader(b))
-	})
-}
+// func playScript(root, transport string) {
+// 	modTime := time.Now()
+// 	var buf bytes.Buffer
+// 	for _, p := range scripts {
+// 		if s, ok := static.Files[p]; ok {
+// 			buf.WriteString(s)
+// 			continue
+// 		}
+// 		b, err := ioutil.ReadFile(filepath.Join(root, "static", p))
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		buf.Write(b)
+// 	}
+// 	fmt.Fprintf(&buf, "\ninitPlayground(new %v());\n", transport)
+// 	b := buf.Bytes()
+// 	http.HandleFunc("/play.js", func(w http.ResponseWriter, r *http.Request) {
+// 		w.Header().Set("Content-type", "application/javascript")
+// 		http.ServeContent(w, r, "", modTime, bytes.NewReader(b))
+// 	})
+// }
 
 func initPlayground(basepath string, origin *url.URL) {
 	if !present.PlayEnabled {
 		return
 	}
 	if *usePlayground {
-		playScript(basepath, "HTTPTransport")
+		// playScript(basepath, "HTTPTransport")
 		return
 	}
 
@@ -77,7 +75,7 @@ func initPlayground(basepath string, origin *url.URL) {
 			return environ("GOOS=nacl")
 		}
 	}
-	playScript(basepath, "SocketTransport")
+	// playScript(basepath, "SocketTransport")
 	http.Handle("/socket", socket.NewHandler(origin))
 }
 

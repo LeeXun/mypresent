@@ -185,7 +185,7 @@ var codeTemplate = template.Must(template.New("code").Funcs(template.FuncMap{
 	// }).Parse(codeTemplateHTML))
 }).Parse(temp))
 
-const temp = `<div id="container" class="monaco-golang" data-raw="{{.Raw}}"></div>`
+const temp = `<div class="my-editor" data-raw="{{.Raw}}"></div>`
 const codeTemplateHTML = `
 {{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 

@@ -18,23 +18,13 @@
     <script src='/static/notes.js'></script>
     {{end}}
     <script src='https://requirejs.org/docs/release/2.3.5/minified/require.js'></script>
-    <script src='/static/monaco2.js'></script>
-
+    <script src='/static/jquery.js'></script>
+    <script src='/static/jquery-ui.js'></script>
+    <script src='/static/playground.js'></script>
+    <script src='/static/play.js'></script>
     <script>
-      // Initialize Google Analytics tracking code on production site only.
-      if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
-        var _gaq = _gaq || [];
-        _gaq.push(["_setAccount", "UA-11222381-6"]);
-        _gaq.push(["b._setAccount", "UA-49880327-6"]);
-        window.trackPageview = function() {
-          _gaq.push(["_trackPageview", location.pathname+location.hash]);
-          _gaq.push(["b._trackPageview", location.pathname+location.hash]);
-        };
-        window.trackPageview();
-        window.trackEvent = function(category, action, opt_label, opt_value, opt_noninteraction) {
-          _gaq.push(["_trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
-          _gaq.push(["b._trackEvent", category, action, opt_label, opt_value, opt_noninteraction]);
-        };
+      window.onload = function() {
+        // initPlayground("SocketTransport");
       }
     </script>
   </head>
@@ -84,10 +74,6 @@
       edges of the page to navigate between slides.<br>
       (Press 'H' or navigate to hide this message.)
     </div>
-
-    {{if .PlayEnabled}}
-    <script src='play.js'></script>
-    {{end}}
 
     <script>
       (function() {

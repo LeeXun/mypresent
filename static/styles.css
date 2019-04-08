@@ -29,17 +29,15 @@
   }
 
   /* 這行必需要加，不然 editor 會出不來 */
-  html,
-  body,
-  #container {
-    position: absolute;
+  .my-editor {
+    /* position: absolute; */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 
   .slides {
@@ -156,8 +154,8 @@
     -webkit-transform: translate3d(-2040px, 0, 0);
   }
   .slides > article.past {
-    /* display: block; */
-    display: none;
+    display: block;
+    /* display: none; */
     transform: translate(-1020px);
     -o-transform: translate(-1020px);
     -moz-transform: translate(-1020px);
@@ -171,8 +169,8 @@
     -webkit-transform: translate3d(0, 0, 0);
   }
   .slides > article.next {
-    /* display: block; */
-    display: none;
+    display: block;
+    /* display: none; */
     transform: translate(1020px);
     -o-transform: translate(1020px);
     -moz-transform: translate(1020px);
@@ -196,8 +194,8 @@
   }
   .slides.layout-widescreen > article.past,
   .slides.layout-faux-widescreen > article.past {
-    /* display: block; */
-    display: none;
+    display: block;
+    /* display: none; */
     transform: translate(-1130px);
     -o-transform: translate(-1130px);
     -moz-transform: translate(-1130px);
@@ -213,8 +211,8 @@
   }
   .slides.layout-widescreen > article.next,
   .slides.layout-faux-widescreen > article.next {
-    /* display: block; */
-    display: none;
+    display: block;
+    /* display: none; */
     transform: translate(1130px);
     -o-transform: translate(1130px);
     -moz-transform: translate(1130px);
