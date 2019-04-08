@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-function formatDoc(sCmd, sValue) {
-  if (validateMode()) { document.execCommand(sCmd, false, sValue); oDoc.focus(); }
-}
-
 function initPlayground(transport) {
 	'use strict';
 
@@ -52,14 +48,15 @@ function initPlayground(transport) {
 		}
 
 		function onRun(e) {
-			var sk = e.shiftKey || localStorage.getItem('play-shiftKey') === 'true';
-			if (running) running.Kill();
-			output.style.display = 'block';
-			outpre.innerHTML = '';
-			run1.style.display = 'none';
-			var options = {Race: sk};
-			running = transport.Run(text(code), PlaygroundOutput(outpre), options);
-			if (window.notesEnabled) updatePlayStorage('onRun', index, e);
+			console.log(e)
+			// var sk = e.shiftKey || localStorage.getItem('play-shiftKey') === 'true';
+			// if (running) running.Kill();
+			// output.style.display = 'block';
+			// outpre.innerHTML = '';
+			// run1.style.display = 'none';
+			// var options = {Race: sk};
+			// running = transport.Run(text(code), PlaygroundOutput(outpre), options);
+			// if (window.notesEnabled) updatePlayStorage('onRun', index, e);
 		}
 
 		function onClose() {

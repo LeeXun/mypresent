@@ -399,7 +399,8 @@ function updateHash() {
 
 function handleBodyKeyDown(event) {
   // If we're in a code element, only handle pgup/down.
-  var inCode = event.target.classList.contains('code');
+  var inCode = event.target.classList.contains('code')
+  || event.target.classList.contains('inputarea');
 
   switch (event.keyCode) {
     case 78: // 'N' opens presenter notes window

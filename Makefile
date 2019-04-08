@@ -1,4 +1,5 @@
 all: link
+	./mypresent -content=./example2
 
 example: all
 	./mypresent -content=./example

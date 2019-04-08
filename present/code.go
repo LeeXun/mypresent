@@ -116,6 +116,7 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 		Lines:   formatLines(lines, highlight),
 		Edit:    strings.Contains(flags, "-edit"),
 		Numbers: strings.Contains(flags, "-numbers"),
+		Raw:     string(rawCode(lines)),
 	}
 
 	// Include before and after in a hidden span for playground code.
@@ -173,6 +174,7 @@ type codeTemplateData struct {
 	Lines          []codeLine
 	Prefix, Suffix []byte
 	Edit, Numbers  bool
+	Raw            string
 }
 
 var leadingSpaceRE = regexp.MustCompile(`^[ \t]*`)
@@ -183,7 +185,7 @@ var codeTemplate = template.Must(template.New("code").Funcs(template.FuncMap{
 	// }).Parse(codeTemplateHTML))
 }).Parse(temp))
 
-const temp = `<div class="monaco"></div>`
+const temp = `<div id="container" class="monaco-golang" data-raw="{{.Raw}}"></div>`
 const codeTemplateHTML = `
 {{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 

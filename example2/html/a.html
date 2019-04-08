@@ -1,29 +1,3 @@
-package present
-
-import (
-	"bytes"
-	"html/template"
-	"strings"
-)
-
-func init() {
-	Register("monaco", parseMonaco)
-}
-
-type Monaco struct {
-}
-
-type manacoTemplateData struct {
-}
-
-func (m Monaco) TemplateName() string { return "monaco" }
-
-var monacoTemplate = template.Must(template.New("monaco").Funcs(template.FuncMap{
-	"trimSpace":    strings.TrimSpace,
-	"leadingSpace": leadingSpaceRE.FindString,
-}).Parse(myCodeT))
-
-const myCodeT = `
 <section class="try">
     <div class="container">
     <h3>Editor</h3>
@@ -59,14 +33,3 @@ const myCodeT = `
         </div>   
    </div>
 </section>
-`
-
-func parseMonaco(ctx *Context, sourceFile string, sourceLine int, cmd string) (Elem, error) {
-	data := &manacoTemplateData{}
-
-	var buf bytes.Buffer
-	if err := monacoTemplate.Execute(&buf, data); err != nil {
-		return nil, err
-	}
-	return Monaco{}, nil
-}

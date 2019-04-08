@@ -12,11 +12,9 @@ console.log("Hello")
 // $(document).ready(function() {
 setTimeout(function() {
   initMonaco()
-}, 2000);
+}, 1000);
 
 function initMonaco() {
-  console.log("Hello")
-	console.log($)
 	
 	// require(['https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.16.2/min-maps/vs/loader.js.map'], function () {
 	require(['vs/editor/editor.main'], function () {

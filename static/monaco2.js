@@ -1,11 +1,11 @@
-require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.8.3/min/vs' }});
+require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.16.2/min/vs' }});
 window.MonacoEnvironment = { getWorkerUrl: () => proxy };
 
 let proxy = URL.createObjectURL(new Blob([`
 	self.MonacoEnvironment = {
-		baseUrl: 'https://unpkg.com/monaco-editor@0.8.3/min/'
+		baseUrl: 'https://unpkg.com/monaco-editor@0.16.2/min/'
 	};
-	importScripts('https://unpkg.com/monaco-editor@0.8.3/min/vs/base/worker/workerMain.js');
+	importScripts('https://unpkg.com/monaco-editor@0.16.2/min/vs/base/worker/workerMain.js');
 `], { type: 'text/javascript' }));
 
 let libContent=`
@@ -30,19 +30,23 @@ declare var $test: TEST
 `
 
 require(["vs/editor/editor.main"], function () {
-	let editor = monaco.editor.create(document.getElementById('container'), {
-		value: [`$test.find_by({interface_a: {no_code_suggestion: ""}})`, `$test.find_by_b("")`].join('\n'),
-		language: 'typescript',
-		theme: 'vs-dark'
+  let container = document.getElementById('container')
+  let raw = container.dataset.raw
+	let editor = monaco.editor.create(container, {
+    value: raw,
+		language: 'go',
+    theme: 'vs-dark',
+    fontSize: 20
   });
-  console.log(editor)
+  
+  window.editor = editor
 	monaco.languages.typescript.typescriptDefaults.addExtraLib(libContent);
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     allowNonTsExtensions: true,
     noLib: true
   });
     
-	editor.addListener('didType', () => {
-		console.log(editor.getValue());
-	});
+	// editor.addListener('didType', () => {
+	// 	console.log(editor.getValue());
+	// });
 });
