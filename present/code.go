@@ -180,12 +180,14 @@ var leadingSpaceRE = regexp.MustCompile(`^[ \t]*`)
 var codeTemplate = template.Must(template.New("code").Funcs(template.FuncMap{
 	"trimSpace":    strings.TrimSpace,
 	"leadingSpace": leadingSpaceRE.FindString,
-}).Parse(codeTemplateHTML))
+	// }).Parse(codeTemplateHTML))
+}).Parse(temp))
 
+const temp = `<div class="monaco"></div>`
 const codeTemplateHTML = `
 {{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 
-<pre{{if .Edit}} contenteditable="true" spellcheck="false"{{end}}{{if .Numbers}} class="numbers"{{end}}>{{/*
+<pre{{if .Edit}} contenteditable="true" onclick="formatDoc('indent');" spellcheck="false"{{end}}{{if .Numbers}} class="numbers"{{end}}>{{/*
 	*/}}{{range .Lines}}<span num="{{.N}}">{{/*
 	*/}}{{if .HL}}{{leadingSpace .L}}<b>{{trimSpace .L}}</b>{{/*
 	*/}}{{else}}{{.L}}{{end}}{{/*
