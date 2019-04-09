@@ -1,7 +1,9 @@
-all: link
-	./mypresent -content=./example2
+all: build
 
-example: all
+build:
+	go build
+
+example: build
 	./mypresent -content=./example
 
 link:
