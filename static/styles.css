@@ -1,5 +1,6 @@
 :root {
   --article-bg-color: white; 
+  --codeblocks-height: 95%;
 }
 
 @media screen {
@@ -35,7 +36,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: var(--codeblocks-height);
     margin: 0;
     padding: 0;
     /* overflow: hidden; */
@@ -376,7 +377,7 @@ div.code {
   margin-bottom: 20px;
   /* overflow: hidden; */
   overflow-y:scroll; 
-  height: 90%;
+  height: var(--codeblocks-height);
 
   background: rgb(240, 240, 240);
   /* border: 1px solid rgb(224, 224, 224); */
