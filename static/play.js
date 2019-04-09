@@ -51,7 +51,7 @@ function initPlayground(transport) {
 			value: raw,
 			language: 'go',
 			theme: 'vs',
-			fontSize: 20
+			fontSize: 18
 		});
 		window.editors.push(editor)
 		if ($ && $(output).resizable) {

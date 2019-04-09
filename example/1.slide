@@ -33,8 +33,8 @@ xunlee@kkbox.com
 * Deadloop
 .monaco code/deadloop_dead.go
 
-* Deadloop
-.monaco code/deadloop_dead.go
+* 在 C 裡面的 Stack 和 Heap
+.monaco code/stack_heap.go
 
 * Deadloop
 .monaco code/deadloop_dead.go
