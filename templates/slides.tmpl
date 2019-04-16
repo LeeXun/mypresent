@@ -59,6 +59,7 @@
         </section>
       {{end}}
       <span class="pagenumber">{{pagenum $s 1}}</span>
+      <div class="article-footer"></div>
       </article>
   <!-- end of slide {{$s.Number}} -->
   {{end}}{{/* of Slide block */}}
@@ -70,6 +71,7 @@
             {{range .Elem}}{{elem $.Template .}}{{end}}
           </div>
         {{end}}
+        <div class="article-footer"></div>
       </article>
 
     </section>
