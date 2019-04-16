@@ -1,3 +1,5 @@
+GOPATH_BIN=~/go/bin/
+
 all: build
 
 build:
@@ -8,11 +10,11 @@ example: build
 
 link:
 	go build
-	rm ~/go/bin/mypresent
-	cp ./mypresent ~/go/bin/
+	rm $(GOPATH_BIN)/mypresent
+	cp ./mypresent $(GOPATH_BIN)
 
 copy:
-	cp ./mypresent ~/go/bin/
+	cp ./mypresent $(GOPATH_BIN)/bin/
 
 check-env:
 ifndef GOPATH

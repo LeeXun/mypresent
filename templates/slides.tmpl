@@ -52,7 +52,11 @@
         <h3>{{$s.Title}}</h3>
         {{range $s.Elem}}{{elem $.Template .}}{{end}}
       {{else}}
-        <h2>{{$s.Title}}</h2>
+        <section class="puretitle-section">
+          <div>
+            <p>{{$s.Title}}</p>
+          </div>
+        </section>
       {{end}}
       <span class="pagenumber">{{pagenum $s 1}}</span>
       </article>
