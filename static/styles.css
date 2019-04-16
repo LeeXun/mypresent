@@ -2,6 +2,15 @@
   --article-bg-color: white; 
   --codeblocks-height: 95%;
   --title-color: rgb(51, 51, 51);
+  --kktix-green: #64c025;
+  --kktix-darkgreen: #436929;
+  --border-bottom-width: 8px;
+  --border-bottom-image: linear-gradient(to right, 
+  var(--kktix-green) 33%, 
+  var(--kktix-darkgreen) 33%, 
+  var(--kktix-darkgreen) 66%, 
+  var(--kktix-green) 66%, 
+  var(--kktix-green) 100%) 5;
 }
 
 @media screen {
@@ -76,10 +85,8 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 
-    border-radius: 10px;
-    -o-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
+    border-top: var(--border-bottom-width) solid;
+    border-image: var(--border-bottom-image);
 
     background-color: var(--article-bg-color);
 
@@ -269,7 +276,8 @@
 /* Styles for slides */
 
 .slides > article {
-  font-family: 'Open Sans', Arial, sans-serif;
+  /* font-family: 'Open Sans', Arial, sans-serif; */
+  font-family: Arial, sans-serif;
 
   color: black;
   /* text-shadow: 0 1px 1px rgba(0, 0, 0, .1); */
@@ -307,7 +315,7 @@ p:first-child {
 
 h1 {
   font-size: 60px;
-  line-height: 60px;
+  line-height: 100px;
 
   padding: 0;
   margin: 0;

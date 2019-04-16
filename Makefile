@@ -1,6 +1,6 @@
 GOPATH_BIN=~/go/bin/
 
-all: build
+all: link
 
 build:
 	go build
