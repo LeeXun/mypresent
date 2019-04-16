@@ -5,7 +5,7 @@ A redistribution of [present](https://github.com/golang/tools) from golang tools
 ## Install
 
 ```
-go get -u github.com/LeeXun/mypresent
+go get -u -v github.com/leexun/mypresent
 ```
 
 ## Extra features
