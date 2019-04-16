@@ -377,11 +377,29 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 			case strings.HasPrefix(text, "- "):
 				var b []string
 				for ok && strings.HasPrefix(text, "- ") {
-					b = append(b, text[2:])
+					b = append(b, text[len("- "):])
 					text, ok = lines.next()
 				}
 				lines.back()
 				e = List{Bullet: b}
+			case strings.HasPrefix(text, "```html"):
+				var ss []string
+				for ok || strings.HasPrefix(text, "```htmlend") {
+					if text == "```htmlend" {
+						break
+					}
+					ss = append(ss, text)
+					text, ok = lines.next()
+				}
+				parser := parsers[".purehtml"]
+				if parser == nil {
+					return nil, fmt.Errorf("%s:%d: unknown command %q\n", name, lines.line, text)
+				}
+				t, err := parser(ctx, name, lines.line, strings.Join(ss, "")[len("```html"):])
+				if err != nil {
+					return nil, err
+				}
+				e = t
 			case isSpeakerNote(text):
 				section.Notes = append(section.Notes, text[2:])
 			case strings.HasPrefix(text, prefix+"* "):

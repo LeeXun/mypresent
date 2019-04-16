@@ -350,21 +350,20 @@ h1 {
   color: rgb(51, 51, 51);
 }
 
-.puretitle-section {
+.slogan {
   display: table;
   height: 100%;
   width: 100%;
 }
 
-.puretitle-section>div {
+.slogan>div {
   display: table-cell;
   vertical-align: middle;
 }
 
-.puretitle-section>div>p {
+.slogan>div>p {
   text-align: center;
   font-size: 45px;
-  font-weight: 600;
   line-height: 45px;
   color: var(--title-color);
 }

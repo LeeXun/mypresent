@@ -43,6 +43,7 @@
             {{range .TextElem}}{{elem $.Template .}}{{end}}
           </div>
         {{end}}
+        <div class="article-footer"></div>
       </article>
 
   {{range $i, $s := .Sections}}
@@ -52,7 +53,7 @@
         <h3>{{$s.Title}}</h3>
         {{range $s.Elem}}{{elem $.Template .}}{{end}}
       {{else}}
-        <section class="puretitle-section">
+        <section class="slogan">
           <div>
             <p>{{$s.Title}}</p>
           </div>
