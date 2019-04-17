@@ -63,12 +63,6 @@ It determines how the formatting actions are rendered.
 
 {{define "html"}}{{.HTML}}{{end}}
 
-{{define "purehtml"}}
-<section class="slogan">
-  <div>
-    {{.HTML}}
-  </div>
-</section>
-{{end}}
+{{define "inlinehtml"}}{{.HTML}}{{end}}
 
 {{define "caption"}}<figcaption>{{style .Text}}</figcaption>{{end}}

@@ -391,7 +391,7 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 					ss = append(ss, text)
 					text, ok = lines.next()
 				}
-				parser := parsers[".purehtml"]
+				parser := parsers[".inlinehtml"]
 				if parser == nil {
 					return nil, fmt.Errorf("%s:%d: unknown command %q\n", name, lines.line, text)
 				}

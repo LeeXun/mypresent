@@ -53,28 +53,14 @@
         <h3>{{$s.Title}}</h3>
         {{range $s.Elem}}{{elem $.Template .}}{{end}}
       {{else}}
-        <section class="slogan">
-          <div>
-            <p>{{$s.Title}}</p>
-          </div>
-        </section>
+        <p>{{$s.Title}}</p>
       {{end}}
       <span class="pagenumber">{{pagenum $s 1}}</span>
       <div class="article-footer"></div>
       </article>
   <!-- end of slide {{$s.Number}} -->
   {{end}}{{/* of Slide block */}}
-
-      <article>
-        <h3>Thank you</h3>
-        {{range .Authors}}
-          <div class="presenter">
-            {{range .Elem}}{{elem $.Template .}}{{end}}
-          </div>
-        {{end}}
-        <div class="article-footer"></div>
-      </article>
-
+  
     </section>
 
     <div id="help">

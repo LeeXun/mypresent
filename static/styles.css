@@ -23,6 +23,8 @@
   var(--footer-second-color) 66%, 
   var(--footer-first-color) 66%, 
   var(--footer-first-color) 100%);
+  --letter-spacing: 2px;
+  --slogan-font-size: 45px;
 }
 
 @media screen {
@@ -49,6 +51,7 @@
     background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190))); */
 
     -webkit-font-smoothing: antialiased;
+    letter-spacing: var(--letter-spacing);
   }
 
   /* 這行必需要加，不然 editor 會出不來 */
@@ -304,8 +307,6 @@
 
   font-size: 26px;
   line-height: 36px;
-
-  letter-spacing: -1px;
 }
 
 b {
@@ -321,77 +322,6 @@ a:visited {
 }
 a:hover {
   color: black;
-}
-
-p {
-  margin: 0;
-  padding: 0;
-
-  margin-top: 20px;
-}
-p:first-child {
-  margin-top: 0;
-}
-
-h1 {
-  font-size: 60px;
-  line-height: 100px;
-
-  padding: 0;
-  margin: 0;
-  margin-top: 200px;
-  margin-bottom: 5px;
-  padding-right: 40px;
-
-  font-weight: 600;
-
-  letter-spacing: -3px;
-
-  color: rgb(51, 51, 51);
-}
-
-.slogan {
-  display: table;
-  height: 100%;
-  width: 100%;
-}
-
-.slogan>div {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.slogan>div>p {
-  text-align: center;
-  font-size: 45px;
-  line-height: 45px;
-  color: var(--title-color);
-}
-
-h3 {
-  font-size: 30px;
-  line-height: 36px;
-
-  padding: 0;
-  margin: 0;
-  padding-right: 40px;
-
-  font-weight: 600;
-
-  letter-spacing: -1px;
-
-  color: rgb(51, 51, 51);
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  margin-top: 20px;
-  margin-left: 1.5em;
-}
-li {
-  padding: 0;
-  margin: 0 0 .5em 0;
 }
 
 div.code {
@@ -412,7 +342,6 @@ pre {
   font-family: 'Droid Sans Mono', 'Courier New', monospace;
   font-size: 18px;
   line-height: 24px;
-  letter-spacing: -1px;
 
   color: black;
 }
@@ -439,26 +368,6 @@ article > .video {
 article.background {
   background-size: contain;
   background-repeat: round;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 40px;
-}
-th {
-  font-weight: 600;
-  text-align: left;
-}
-td,
-th {
-  border: 1px solid rgb(224, 224, 224);
-  padding: 5px 10px;
-  vertical-align: top;
-}
-
-p.link {
-  margin-left: 20px;
 }
 
 .pagenumber {
@@ -585,4 +494,89 @@ figcaption {
   -o-border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+}
+
+.article-title {
+  font-size: 42px;
+  padding: 0;
+  margin: 0;
+  padding: 20px 0px 30px 20px;
+  font-weight: 600;
+  color: var(--title-color)
+}
+
+.slogan {
+  text-align: center;
+  color: var(--title-color);
+  font-size: var(--slogan-font-size);
+}
+
+.slogan-10 {
+  padding-top: 10%;
+}
+
+.slogan-15 {
+  padding-top: 15%;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.content {
+  padding-top: 20px;
+  padding-left: 50px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+  margin-left: 1.5em;
+}
+
+li {
+  padding: 0;
+  margin: 0 0 .5em 0;
+}
+
+.landing-title {
+  font-size: 60px;
+  line-height: 100px;
+
+  padding: 0;
+  padding-top: 200px;
+  padding-right: 40px;
+
+  font-weight: 600;
+
+  letter-spacing: var(--letter-spacing);
+
+  color: rgb(51, 51, 51);
+}
+
+/* table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+}
+th {
+  font-weight: 600;
+  text-align: left;
+}
+td,
+th {
+  border: 1px solid rgb(224, 224, 224);
+  padding: 5px 10px;
+  vertical-align: top;
+} */
+
+.embeded-gist {
+  overflow-y:scroll;
+  height:75%;
+  width:100%;
+  padding:0;
+}
+::selection {
+  background: #fffbdd;
 }

@@ -14,11 +14,11 @@ go get -u -v github.com/leexun/mypresent
 
 ```
 ```html
-<section class="slogan">
+<div class="slogan">
   <div>
     <p><b>About me</b></p>
   </div>
-</section>
+</div>
 ```htmlend
 ```
 
