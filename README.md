@@ -10,15 +10,18 @@ go get -u -v github.com/leexun/mypresent
 
 ## Extra features
 
-### Pure HTML
+### Inline HTML
 
 ```
+* _
 ```html
-<div class="slogan">
-  <div>
-    <p><b>About me</b></p>
-  </div>
-</div>
+<p class="slogan slogan-15 bold">About me</p>
+```htmlend
+
+* _
+```html
+<p class="slogan slogan-10">First line,</p>
+<p class="slogan">second line.</p>
 ```htmlend
 ```
 
