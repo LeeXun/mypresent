@@ -389,6 +389,7 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 						break
 					}
 					ss = append(ss, text)
+					ss = append(ss, "\n") // Preserve '\n' character for highlight.js
 					text, ok = lines.next()
 				}
 				parser := parsers[".inlinehtml"]
