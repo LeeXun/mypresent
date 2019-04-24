@@ -31,6 +31,10 @@ go get -u -v github.com/leexun/mypresent
 .monaco ./code/example.go
 ```
 
+## Cautions
+
+<b>Never</b> serve a public web service by this tool. It is only for presentation and provides full control of remote code execution.
+
 ## Note
 
 GC optimization is currently disabled. Will use parameter to control this.
