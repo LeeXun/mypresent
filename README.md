@@ -4,8 +4,9 @@ A redistribution of [present](https://github.com/golang/tools) from golang tools
 
 ## Install
 
-```
+```bash
 go get -u -v github.com/leexun/mypresent
+mypresent --help # remember to setup your GOPATH, GOROOT in env
 ```
 
 ## Extra features
